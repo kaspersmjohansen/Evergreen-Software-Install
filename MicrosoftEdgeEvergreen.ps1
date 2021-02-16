@@ -1,5 +1,6 @@
 ﻿# Configure security protocol to use TLS 1.2 for new connections
 Write-Host "Configuring TLS1.2 security protocol for new connections" -ForegroundColor Cyan
+Write-Host ""
 [Net.ServicePointManager]::SecurityProtocol = "tls12"
 
 # Download latest NuGet Package Provider
@@ -38,37 +39,35 @@ If (!(Test-Path -Path $Destination))
 {
 Write-Host "Creating $Destination" -ForegroundColor Cyan
 Write-Host ""
-New-Item -ItemType Directory -Path $Destination
+New-Item -ItemType Directory -Path $Destination | Out-Null
 }
 
-# Push-Location $Destination
-
-If (!(Test-Path -Path $Source))
-{
-Invoke-WebRequest -UseBasicParsing -Uri $url -OutFile $Destination\$Source
-Write-Host "$Vendor $Product download finished" -ForegroundColor Cyan
+# Download and deploy Microsoft Edge
+Write-Host "Downloading latest $Vendor $Product" -ForegroundColor Cyan
 Write-Host ""
-}
+Invoke-WebRequest -UseBasicParsing -Uri $url -OutFile $Destination\$Source
 
-# Pop-Location
-
-# Deploy Microsoft Edge
+Write-Host "Installing $Vendor $Product" -ForegroundColor Cyan
+Write-Host ""
 Start-Process -FilePath $Destination\$Source -Wait -ArgumentList $InstallArguments
 
 # Microsoft Edge post deployment tasks
-# Disable Microsoft Edge scheduled tasks
-
-# Disable Microsoft Edge update service
-$Services = "edgeupdate","MicrosoftEdgeElevationService"
-ForEach ($Service in $Services)
+# Disable Microsoft Edge auto update
+If (!(Test-Path -Path HKLM:SOFTWARE\Policies\Microsoft\EdgeUpdate))
 {
-If ((Get-Service -Name $Service).Status -eq "Stopped")
-{
-Set-Service -Name $Service -StartupType Disabled
+New-Item -Path HKLM:SOFTWARE\Policies\Microsoft\EdgeUpdate
+New-ItemProperty -Path HKLM:SOFTWARE\Policies\Microsoft\EdgeUpdate -Name UpdateDefault -Value 0 -PropertyType DWORD
 }
 else
 {
-Stop-Service -Name $Service -Force -Verbose
-Set-Service -Name $Service -StartupType Disabled
+Set-ItemProperty -Path HKLM:SOFTWARE\Policies\Microsoft\EdgeUpdate -Name UpdateDefault -Value 0
 }
-}
+
+# Disable Microsoft Edge scheduled tasks
+Get-ScheduledTask -TaskName MicrosoftEdgeUpdate* | Disable-ScheduledTask | Out-Null
+
+# Configure Microsoft Edge update service to manual startup
+Set-Service -Name edgeupdate -StartupType Manual
+
+# Execute the Microsoft Edge browser replacement task
+Start-Process -FilePath "${env:ProgramFiles(x86)}\Microsoft\EdgeUpdate\MicrosoftEdgeUpdate.exe" -Wait -ArgumentList "/browserreplacement"
