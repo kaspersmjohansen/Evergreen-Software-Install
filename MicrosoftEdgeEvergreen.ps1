@@ -1,4 +1,7 @@
-﻿# Configure security protocol to use TLS 1.2 for new connections
+﻿# Clear screen
+cls
+
+# Configure security protocol to use TLS 1.2 for new connections
 Write-Host "Configuring TLS1.2 security protocol for new connections" -ForegroundColor Cyan
 Write-Host ""
 [Net.ServicePointManager]::SecurityProtocol = "tls12"
@@ -8,15 +11,19 @@ If (!(Test-Path -Path "C:\Program Files\PackageManagement\ProviderAssemblies\nug
 {
 Write-Host "Downloading and installing latest NuGet Package Provider" -ForegroundColor Cyan
 Write-Host ""
-Find-PackageProvider -Name 'Nuget' -ForceBootstrap -IncludeDependencies
+Find-PackageProvider -Name 'Nuget' -ForceBootstrap -IncludeDependencies | Out-Null
 }    
 
 # Download latest Evergreen module
-If (!(Get-Module -ListAvailable -Name Evergreen))
-{
 Write-Host "Downloading and installing latest Evergreen module" -ForegroundColor Cyan
 Write-Host ""
+If (!(Get-Module -ListAvailable -Name Evergreen))
+{
 Install-Module Evergreen -Force | Import-Module Evergreen
+}
+else
+{
+Update-Module Evergreen -Force
 }
 
 # Configure Evergreen variables to download the lastest 64-bit version of Microsoft Edge stable release
@@ -43,15 +50,17 @@ New-Item -ItemType Directory -Path $Destination | Out-Null
 }
 
 # Download and deploy Microsoft Edge
-Write-Host "Downloading latest $Vendor $Product" -ForegroundColor Cyan
+Write-Host "Downloading latest $Vendor $Product release" -ForegroundColor Cyan
 Write-Host ""
 Invoke-WebRequest -UseBasicParsing -Uri $url -OutFile $Destination\$Source
 
-Write-Host "Installing $Vendor $Product" -ForegroundColor Cyan
+Write-Host "Installing $Vendor $Product v$Version" -ForegroundColor Cyan
 Write-Host ""
 Start-Process -FilePath $Destination\$Source -Wait -ArgumentList $InstallArguments
 
 # Microsoft Edge post deployment tasks
+Write-Host "Applying $Vendor $Product post setup customizations" -ForegroundColor Cyan
+
 # Disable Microsoft Edge auto update
 If (!(Test-Path -Path HKLM:SOFTWARE\Policies\Microsoft\EdgeUpdate))
 {
@@ -69,5 +78,6 @@ Get-ScheduledTask -TaskName MicrosoftEdgeUpdate* | Disable-ScheduledTask | Out-N
 # Configure Microsoft Edge update service to manual startup
 Set-Service -Name edgeupdate -StartupType Manual
 
-# Execute the Microsoft Edge browser replacement task
+# Execute the Microsoft Edge browser replacement task to make sure that the legacy Microsoft Edge browser is tucked away
+# This is only needed on Windows 10 versions where Microsoft Edge is not included in the OS.
 Start-Process -FilePath "${env:ProgramFiles(x86)}\Microsoft\EdgeUpdate\MicrosoftEdgeUpdate.exe" -Wait -ArgumentList "/browserreplacement"
