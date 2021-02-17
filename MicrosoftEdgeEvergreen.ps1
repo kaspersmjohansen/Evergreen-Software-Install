@@ -9,13 +9,13 @@ Write-Host ""
 # Download latest NuGet Package Provider
 If (!(Test-Path -Path "C:\Program Files\PackageManagement\ProviderAssemblies\nuget"))
 {
-Write-Host "Downloading and installing latest NuGet Package Provider" -ForegroundColor Cyan
+Write-Host "Installing latest NuGet Package Provider" -ForegroundColor Cyan
 Write-Host ""
 Find-PackageProvider -Name 'Nuget' -ForceBootstrap -IncludeDependencies | Out-Null
 }    
 
 # Download latest Evergreen module
-Write-Host "Downloading and installing latest Evergreen module" -ForegroundColor Cyan
+Write-Host "Installing latest Evergreen module" -ForegroundColor Cyan
 Write-Host ""
 If (!(Get-Module -ListAvailable -Name Evergreen))
 {
