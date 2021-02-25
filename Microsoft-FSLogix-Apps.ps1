@@ -1,4 +1,23 @@
-﻿# Clear screen
+﻿#Requires -RunAsAdministrator
+<#
+**************************************************************************************************************************************
+Name:               Microsoft-FSLogix-Apps
+Author:             Kasper Johansen
+Website:            https://virtualwarlock.net            
+
+*******************************************************************************************************************************************
+
+.SYNOPSIS
+    This script installs Microsoft FSLogix Apps using the Evergreen module
+
+.DESCRIPTION
+    This script installs the latest Microsoft using the Evergreen module created by Aaron Parker, Bronson Mangan and Trond Eric Haavarstein
+    https://github.com/aaronparker/Evergreen
+
+*******************************************************************************************************************************************
+#>
+
+# Clear screen
 cls
 
 # Configure security protocol to use TLS 1.2 for new connections
