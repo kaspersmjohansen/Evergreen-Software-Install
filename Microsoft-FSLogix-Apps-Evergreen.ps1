@@ -86,7 +86,7 @@ Start-Process -FilePath "$Destination\x64\Release\FSLogixAppsSetup.exe" -Wait -A
 Write-Host "Applying $Vendor $Product post setup customizations" -ForegroundColor Cyan
 
 # Windows Search CoreCount modification
-New-ItemProperty -Path "HKLM:SOFTWARE\Microsoft\Windows Search" -Name "CoreCount" -Value "1" -Type DWORD -Verbose
+New-ItemProperty -Path "HKLM:SOFTWARE\Microsoft\Windows Search" -Name "CoreCount" -Value "1" -Type DWORD
 
 # Enable or disable FSLogix Apps agent search roaming - Apply different configurations based on operating system
 If ($OS -Like "*Windows Server 2016*")
@@ -95,16 +95,23 @@ If ($OS -Like "*Windows Server 2016*")
 }
         If ($OS -Like "*Windows Server 2019*" -or $OS -eq "Microsoft Windows 10 Enterprise for Virtual Desktops")
         {
-            New-ItemProperty -Path "HKLM:SOFTWARE\FSLogix\Apps" -Name "RoamSearch" -Value "0" -Type DWORD -Verbose
+            New-ItemProperty -Path "HKLM:SOFTWARE\FSLogix\Apps" -Name "RoamSearch" -Value "0" -Type DWORD
         }
             If ($OS -Like "*Windows 10*" -and $OS -ne "Microsoft Windows 10 Enterprise for Virtual Desktops")
             {
-                New-ItemProperty -Path "HKLM:SOFTWARE\FSLogix\Apps" -Name "RoamSearch" -Value "1" -Type DWORD -Verbose
+                New-ItemProperty -Path "HKLM:SOFTWARE\FSLogix\Apps" -Name "RoamSearch" -Value "1" -Type DWORD
             }
 
 # Implement user based group policy processing fix
+If (!(Test-Path -Path HKLM:SOFTWARE\FSLogix\Profiles))
+{
 New-Item -Path "HKLM:SOFTWARE\FSLogix" -Name Profiles
-New-ItemProperty -Path "HKLM:SOFTWARE\FSLogix\Profiles" -Name "GroupPolicyState" -Value "0" -Type DWORD -Verbose
+New-ItemProperty -Path "HKLM:SOFTWARE\FSLogix\Profiles" -Name "GroupPolicyState" -Value "0" -Type DWORD
+}
+else
+{
+New-ItemProperty -Path "HKLM:SOFTWARE\FSLogix\Profiles" -Name "GroupPolicyState" -Value "0" -Type DWORD
+}
 
 # Implement scheduled task to restart Windows Search service on Event ID 2
 # Define CIM object variables
@@ -122,7 +129,7 @@ $S = New-ScheduledTaskSettingsSet
 # Cook it all up and create the scheduled task
 $RegSchTaskParameters = @{
     TaskName    = "Restart Windows Search Service on Event ID 2"
-    Description = "Restarts the Windows Search service on event ID 2"
+    Description = "Restarts the Windows Search service on event ID 2 - Workaround described here - https://virtualwarlock.net/how-to-install-the-fslogix-apps-agent/#Windows_Search_Roaming_workaround_1"
     TaskPath    = "\"
     Action      = $A
     Principal   = $P
