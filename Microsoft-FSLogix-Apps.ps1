@@ -45,20 +45,21 @@ else
 Update-Module Evergreen -Force
 }
 
-# Configure Evergreen variables to download the lastest 64-bit version of Microsoft Edge stable release
+# Configure Evergreen variables to download the lastest version of Microsoft FSLogix Apps release
 $Vendor = "Microsoft"
-$Product = "Edge"
-$PackageName = "MicrosoftEdgeEnterpriseX64"
-$Evergreen = Get-MicrosoftEdge | Where-Object { $_.Architecture -eq "x64" -and $_.Channel -eq "Stable" -and $_.Platform -eq "Windows" } | Sort-Object -Property Version -Descending | Select-Object -First 1
+$Product = "FSLogix Apps Agent"
+$Evergreen = Get-MicrosoftFSLogixApps | Sort-Object -Property Version -Descending | Select-Object -First 1
 $Version = $Evergreen.Version
+$PackageName = "FSLogix_Apps_$version"
 $URL = $Evergreen.uri
-$InstallerType = "msi"
+$InstallerType = "zip"
 $Source = "$PackageName" + "." + "$InstallerType"
 $Destination = "C:\Temp" + "\$Vendor\$Product\$Version"
+$OS = (Get-WmiObject Win32_OperatingSystem).Caption
 
-# Microsoft Edge install arguments 
+# Microsoft FSLogix Apps install arguments 
 # This will prevent desktop and taskbar shortcuts from appearing during first logon 
-$InstallArguments = "REBOOT=ReallySuppress /qn DONOTCREATEDESKTOPSHORTCUT=true DONOTCREATETASKBARSHORTCUT=true"
+$InstallArguments = "/install /quiet /norestart"
 
 # Create destination folder, if not exist
 If (!(Test-Path -Path $Destination))
@@ -80,23 +81,52 @@ Start-Process -FilePath $Destination\$Source -Wait -ArgumentList $InstallArgumen
 # Microsoft Edge post deployment tasks
 Write-Host "Applying $Vendor $Product post setup customizations" -ForegroundColor Cyan
 
-# Disable Microsoft Edge auto update
-If (!(Test-Path -Path HKLM:SOFTWARE\Policies\Microsoft\EdgeUpdate))
+# Microsoft FSLogix Apps post deployment tasks
+
+# Windows Search CoreCount modification
+New-ItemProperty -Path "HKLM:SOFTWARE\Microsoft\Windows Search" -Name "CoreCount" -Value "1" -Type DWORD -Verbose
+
+
+# Enable or disable FSLogix Apps agent search roaming - Apply different configurations based on operating system
+If ($OS -Like "*Windows Server 2016*")
 {
-New-Item -Path HKLM:SOFTWARE\Policies\Microsoft\EdgeUpdate
-New-ItemProperty -Path HKLM:SOFTWARE\Policies\Microsoft\EdgeUpdate -Name UpdateDefault -Value 0 -PropertyType DWORD
+    New-ItemProperty -Path "HKLM:SOFTWARE\FSLogix\Apps" -Name "RoamSearch" -Value "2" -Type DWORD -Verbose
 }
-else
-{
-Set-ItemProperty -Path HKLM:SOFTWARE\Policies\Microsoft\EdgeUpdate -Name UpdateDefault -Value 0
+        If ($OS -Like "*Windows Server 2019*" -or $OS -eq "Microsoft Windows 10 Enterprise for Virtual Desktops")
+        {
+            New-ItemProperty -Path "HKLM:SOFTWARE\FSLogix\Apps" -Name "RoamSearch" -Value "0" -Type DWORD -Verbose
+        }
+            If ($OS -Like "*Windows 10*" -and $OS -ne "Microsoft Windows 10 Enterprise for Virtual Desktops")
+            {
+                New-ItemProperty -Path "HKLM:SOFTWARE\FSLogix\Apps" -Name "RoamSearch" -Value "1" -Type DWORD -Verbose
+            }
+
+# Implement user based group policy processing fix
+New-ItemProperty -Path "HKLM:SOFTWARE\FSLogix\Profiles" -Name "GroupPolicyState" -Value "0" -Type DWORD -Verbose
+
+
+# Implement scheduled task to restart Windows Search service on Event ID 2
+# Define CIM object variables
+# This is needed for accessing the non-default trigger settings when creating a schedule task using Powershell
+$Class = cimclass MSFT_TaskEventTrigger root/Microsoft/Windows/TaskScheduler
+$Trigger = $class | New-CimInstance -ClientOnly
+$Trigger.Enabled = $true
+$Trigger.Subscription = "<QueryList><Query Id=`"0`" Path=`"Application`"><Select Path=`"Application`">*[System[Provider[@Name='Microsoft-Windows-Search-ProfileNotify'] and EventID=2]]</Select></Query></QueryList>"
+
+# Define additional variables containing scheduled task action and scheduled task principal
+$A = New-ScheduledTaskAction –Execute powershell.exe -Argument "Restart-Service Wsearch"
+$P = New-ScheduledTaskPrincipal -UserId "NT AUTHORITY\SYSTEM" -LogonType ServiceAccount
+$S = New-ScheduledTaskSettingsSet
+
+# Cook it all up and create the scheduled task
+$RegSchTaskParameters = @{
+    TaskName    = "Restart Windows Search Service on Event ID 2"
+    Description = "Restarts the Windows Search service on event ID 2"
+    TaskPath    = "\"
+    Action      = $A
+    Principal   = $P
+    Settings    = $S
+    Trigger     = $Trigger
 }
 
-# Disable Microsoft Edge scheduled tasks
-Get-ScheduledTask -TaskName MicrosoftEdgeUpdate* | Disable-ScheduledTask | Out-Null
-
-# Configure Microsoft Edge update service to manual startup
-Set-Service -Name edgeupdate -StartupType Manual
-
-# Execute the Microsoft Edge browser replacement task to make sure that the legacy Microsoft Edge browser is tucked away
-# This is only needed on Windows 10 versions where Microsoft Edge is not included in the OS.
-Start-Process -FilePath "${env:ProgramFiles(x86)}\Microsoft\EdgeUpdate\MicrosoftEdgeUpdate.exe" -Wait -ArgumentList "/browserreplacement"
+Register-ScheduledTask @RegSchTaskParameters
