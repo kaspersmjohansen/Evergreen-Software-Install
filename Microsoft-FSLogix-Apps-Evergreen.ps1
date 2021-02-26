@@ -1,7 +1,7 @@
 ﻿#Requires -RunAsAdministrator
 <#
 **************************************************************************************************************************************
-Name:               Microsoft-FSLogix-Apps
+Name:               Microsoft-FSLogix-Apps-Evergreen
 Author:             Kasper Johansen
 Website:            https://virtualwarlock.net            
 
@@ -80,7 +80,7 @@ Expand-Archive -Path $Destination\$Source -DestinationPath "$Destination"
 # Deploy Microsoft FSLogix Apps Agent
 Write-Host "Installing $Vendor $Product v$Version" -ForegroundColor Cyan
 Write-Host ""
-Start-Process -FilePath "$Destination\FSLogixAppsSetup.exe" -Wait -ArgumentList $InstallArguments
+Start-Process -FilePath "$Destination\x64\Release\FSLogixAppsSetup.exe" -Wait -ArgumentList $InstallArguments
 
 # Microsoft FSLogix Apps post deployment tasks
 Write-Host "Applying $Vendor $Product post setup customizations" -ForegroundColor Cyan
@@ -103,8 +103,8 @@ If ($OS -Like "*Windows Server 2016*")
             }
 
 # Implement user based group policy processing fix
+New-Item -Path "HKLM:SOFTWARE\FSLogix" -Name Profiles
 New-ItemProperty -Path "HKLM:SOFTWARE\FSLogix\Profiles" -Name "GroupPolicyState" -Value "0" -Type DWORD -Verbose
-
 
 # Implement scheduled task to restart Windows Search service on Event ID 2
 # Define CIM object variables
