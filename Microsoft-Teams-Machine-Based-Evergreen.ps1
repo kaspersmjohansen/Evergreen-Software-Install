@@ -90,7 +90,7 @@ Start-Process -FilePath $Destination\$Source -Wait -ArgumentList $InstallArgumen
 Write-Host "Applying $Vendor $Product post setup customizations" -ForegroundColor Cyan
 
 # Remove public desktop shortcut
-Remove-Item -Path "$env:PUBLIC\Desktop\Teams.lnk" -Force
+Remove-Item -Path "$env:PUBLIC\Desktop\Microsoft Teams.lnk" -Force
 
 # Disable Teams auto start
 Remove-ItemProperty -Path "HKLM:SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Run" -Name "Teams"
