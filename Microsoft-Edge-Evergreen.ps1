@@ -1,20 +1,17 @@
 ﻿#Requires -RunAsAdministrator
 <#
-**************************************************************************************************************************************
+***********************************************************************************************************************************************
 Name:               Microsoft-Edge-Evergreen
 Author:             Kasper Johansen
 Website:            https://virtualwarlock.net            
 
-*******************************************************************************************************************************************
-
-.SYNOPSIS
-    This script installs Microsoft Edge using the Evergreen module
+***********************************************************************************************************************************************
 
 .DESCRIPTION
-    This script installs the latest Microsoft using the Evergreen module created by Aaron Parker, Bronson Mangan and Trond Eric Haavarstein
+    This script installs the latest Microsoft Edgeusing the Evergreen module created by Aaron Parker, Bronson Mangan and Trond Eric Haavarstein
     https://github.com/aaronparker/Evergreen
 
-*******************************************************************************************************************************************
+***********************************************************************************************************************************************
 #>
 
 # Clear screen
@@ -56,7 +53,7 @@ $InstallerType = "msi"
 $Source = "$PackageName" + "." + "$InstallerType"
 $Destination = "C:\Temp" + "\$Vendor\$Product\$Version"
 
-# Microsoft Edge install arguments 
+# Application install arguments 
 # This will prevent desktop and taskbar shortcuts from appearing during first logon 
 $InstallArguments = "REBOOT=ReallySuppress /qn DONOTCREATEDESKTOPSHORTCUT=true DONOTCREATETASKBARSHORTCUT=true"
 

@@ -1,20 +1,17 @@
 ﻿#Requires -RunAsAdministrator
 <#
-**************************************************************************************************************************************
+**************************************************************************************************************************************************************
 Name:               Microsoft-FSLogix-Apps-Evergreen
 Author:             Kasper Johansen
 Website:            https://virtualwarlock.net            
 
-*******************************************************************************************************************************************
-
-.SYNOPSIS
-    This script installs Microsoft FSLogix Apps using the Evergreen module
+**************************************************************************************************************************************************************
 
 .DESCRIPTION
-    This script installs the latest Microsoft using the Evergreen module created by Aaron Parker, Bronson Mangan and Trond Eric Haavarstein
+    This script installs the latest Microsoft FSLogix Apps Agent using the Evergreen module created by Aaron Parker, Bronson Mangan and Trond Eric Haavarstein
     https://github.com/aaronparker/Evergreen
 
-*******************************************************************************************************************************************
+**************************************************************************************************************************************************************
 #>
 
 # Clear screen
@@ -57,7 +54,7 @@ $Source = "$PackageName" + "." + "$InstallerType"
 $Destination = "C:\Temp" + "\$Vendor\$Product\$Version"
 $OS = (Get-WmiObject Win32_OperatingSystem).Caption
 
-# Microsoft FSLogix Apps install arguments 
+# Application install arguments 
 # This will prevent desktop and taskbar shortcuts from appearing during first logon 
 $InstallArguments = "/install /quiet /norestart"
 
