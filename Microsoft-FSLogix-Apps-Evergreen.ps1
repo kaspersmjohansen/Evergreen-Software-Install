@@ -1,17 +1,18 @@
 ﻿#Requires -RunAsAdministrator
 <#
-**************************************************************************************************************************************************************
+*************************************************************************************************
 Name:               Microsoft-FSLogix-Apps-Evergreen
 Author:             Kasper Johansen
 Website:            https://virtualwarlock.net            
 
-**************************************************************************************************************************************************************
+*************************************************************************************************
 
 .DESCRIPTION
-    This script installs the latest Microsoft FSLogix Apps Agent using the Evergreen module created by Aaron Parker, Bronson Mangan and Trond Eric Haavarstein
+    This script installs the latest Microsoft FSLogix Apps Agent 
+    using the Evergreen module created by Aaron Parker, Bronson Mangan and Trond Eric Haavarstein
     https://github.com/aaronparker/Evergreen
 
-**************************************************************************************************************************************************************
+*************************************************************************************************
 #>
 
 # Clear screen
@@ -66,12 +67,12 @@ Write-Host ""
 New-Item -ItemType Directory -Path $Destination | Out-Null
 }
 
-# Download Microsoft FSLogix Apps Agent
+# Download and deploy application
 Write-Host "Downloading latest $Vendor $Product release" -ForegroundColor Cyan
 Write-Host ""
 Invoke-WebRequest -UseBasicParsing -Uri $url -OutFile $Destination\$Source
 
-# Expand the FSLogix Apps ZIp file
+# Expand the FSLogix Apps Zip file
 Expand-Archive -Path $Destination\$Source -DestinationPath "$Destination"
 
 # Deploy Microsoft FSLogix Apps Agent
@@ -79,7 +80,7 @@ Write-Host "Installing $Vendor $Product v$Version" -ForegroundColor Cyan
 Write-Host ""
 Start-Process -FilePath "$Destination\x64\Release\FSLogixAppsSetup.exe" -Wait -ArgumentList $InstallArguments
 
-# Microsoft FSLogix Apps post deployment tasks
+# Application post deployment tasks
 Write-Host "Applying $Vendor $Product post setup customizations" -ForegroundColor Cyan
 
 # Windows Search CoreCount modification
