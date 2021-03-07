@@ -56,7 +56,7 @@ $Destination = "C:\Temp" + "\$Vendor\$Product\$Version"
 
 # Application install arguments 
 # This will prevent desktop and taskbar shortcuts from appearing during first logon 
-$InstallArguments = "/noreboot /silent /includeSSON ENABLE_SSON=Yes EnableCEIP=False"
+$InstallArguments = "/noreboot /silent EnableCEIP=False"
 
 # Create destination folder, if not exist
 If (!(Test-Path -Path $Destination))
