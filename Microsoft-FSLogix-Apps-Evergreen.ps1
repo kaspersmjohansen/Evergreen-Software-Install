@@ -43,7 +43,7 @@ else
 Update-Module Evergreen -Force
 }
 
-# Configure Evergreen variables to download the lastest version of Microsoft FSLogix Apps release
+# Configure Evergreen variables
 $Vendor = "Microsoft"
 $Product = "FSLogix Apps Agent"
 $EvergreenApp = Get-EvergreenApp -Name MicrosoftFSLogixApps | Sort-Object -Property Version -Descending | Select-Object -First 1

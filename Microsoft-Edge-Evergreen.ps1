@@ -42,7 +42,7 @@ else
 Update-Module Evergreen -Force
 }
 
-# Configure Evergreen variables to download the lastest 64-bit version of Microsoft Edge stable release
+# Configure Evergreen variables
 $Vendor = "Microsoft"
 $Product = "Edge"
 $EvergreenApp = Get-EvergreenApp -Name MicrosoftEdge | Where-Object {$_.Architecture -eq "x64"}

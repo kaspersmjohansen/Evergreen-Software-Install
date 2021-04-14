@@ -42,7 +42,7 @@ else
 Update-Module Evergreen -Force
 }
 
-# Configure Evergreen variables to download the lastest 64-bit version of Microsoft Teams
+# Configure Evergreen variables
 $Vendor = "Microsoft"
 $Product = "Teams"
 $EvergreenApp = Get-EvergreenApp -Name MicrosoftTeams | Where-Object {$_.Architecture -eq "x64" -and $_.Ring -eq "General"}
