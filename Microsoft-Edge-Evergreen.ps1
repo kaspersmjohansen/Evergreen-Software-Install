@@ -45,13 +45,11 @@ Update-Module Evergreen -Force
 # Configure Evergreen variables to download the lastest 64-bit version of Microsoft Edge stable release
 $Vendor = "Microsoft"
 $Product = "Edge"
-$PackageName = "MicrosoftEdgeEnterpriseX64"
-$Evergreen = Get-MicrosoftEdge | Where-Object { $_.Architecture -eq "x64" -and $_.Channel -eq "Stable" -and $_.Platform -eq "Windows" } | Sort-Object -Property Version -Descending | Select-Object -First 1
-$Version = $Evergreen.Version
-$URL = $Evergreen.uri
-$InstallerType = "msi"
-$Source = "$PackageName" + "." + "$InstallerType"
-$Destination = "C:\Temp" + "\$Vendor\$Product\$Version"
+$EvergreenApp = Get-EvergreenApp -Name MicrosoftEdge | Where-Object {$_.Architecture -eq "x64"}
+$EvergreenAppInstaller = Split-Path -Path $EvergreenApp.Uri -Leaf
+$EvergreenAppURL = $EvergreenApp.uri
+$EvergreenAppVersion = $EvergreenApp.Version
+$Destination = "C:\Temp\$Vendor $Product"
 
 # Application install arguments 
 # This will prevent desktop and taskbar shortcuts from appearing during first logon 
@@ -68,14 +66,14 @@ New-Item -ItemType Directory -Path $Destination | Out-Null
 # Download and deploy application
 Write-Host "Downloading latest $Vendor $Product release" -ForegroundColor Cyan
 Write-Host ""
-Invoke-WebRequest -UseBasicParsing -Uri $url -OutFile $Destination\$Source
+Invoke-WebRequest -UseBasicParsing -Uri $EvergreenAppURL -OutFile $Destination\$EvergreenAppInstaller
 
-Write-Host "Installing $Vendor $Product v$Version" -ForegroundColor Cyan
+Write-Host "Installing $Vendor $Product v$EvergreenAppVersion" -ForegroundColor Cyan
 Write-Host ""
-Start-Process -FilePath $Destination\$Source -Wait -ArgumentList $InstallArguments
+Start-Process -FilePath $Destination\$EvergreenAppInstaller -Wait -ArgumentList $InstallArguments
 
 # Application post deployment tasks
-Write-Host "Applying $Vendor $Product post setup customizations" -ForegroundColor Cyan
+Write-Host "Applying Microsoft Edge post setup customizations" -ForegroundColor Cyan
 
 # Disable Microsoft Edge auto update
 If (!(Test-Path -Path HKLM:SOFTWARE\Policies\Microsoft\EdgeUpdate))
