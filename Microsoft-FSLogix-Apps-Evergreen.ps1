@@ -46,13 +46,19 @@ Update-Module Evergreen -Force
 # Configure Evergreen variables to download the lastest version of Microsoft FSLogix Apps release
 $Vendor = "Microsoft"
 $Product = "FSLogix Apps Agent"
-$Evergreen = Get-MicrosoftFSLogixApps | Sort-Object -Property Version -Descending | Select-Object -First 1
-$Version = $Evergreen.Version
-$PackageName = "FSLogix_Apps_$version"
-$URL = $Evergreen.uri
-$InstallerType = "zip"
-$Source = "$PackageName" + "." + "$InstallerType"
-$Destination = "C:\Temp" + "\$Vendor\$Product\$Version"
+# $Evergreen = Get-MicrosoftFSLogixApps | Sort-Object -Property Version -Descending | Select-Object -First 1
+# $Version = $Evergreen.Version
+# $PackageName = "FSLogix_Apps_$version"
+# $URL = $Evergreen.uri
+# $InstallerType = "zip"
+# $Source = "$PackageName" + "." + "$InstallerType"
+# $Destination = "C:\Temp" + "\$Vendor\$Product\$Version"
+
+$EvergreenApp = Get-EvergreenApp -Name MicrosoftFSLogixApps | Sort-Object -Property Version -Descending | Select-Object -First 1
+$EvergreenAppInstaller = Split-Path -Path $EvergreenApp.Uri -Leaf
+$EvergreenAppURL = $EvergreenApp.uri
+$EvergreenAppVersion = $EvergreenApp.Version
+$Destination = "C:\Temp\$Vendor $Product"
 $OS = (Get-WmiObject Win32_OperatingSystem).Caption
 
 # Application install arguments 
@@ -70,13 +76,13 @@ New-Item -ItemType Directory -Path $Destination | Out-Null
 # Download and deploy application
 Write-Host "Downloading latest $Vendor $Product release" -ForegroundColor Cyan
 Write-Host ""
-Invoke-WebRequest -UseBasicParsing -Uri $url -OutFile $Destination\$Source
+Invoke-WebRequest -UseBasicParsing -Uri $EvergreenAppURL -OutFile $Destination\$EvergreenAppInstaller
 
 # Expand the FSLogix Apps Zip file
-Expand-Archive -Path $Destination\$Source -DestinationPath "$Destination"
+Expand-Archive -Path $Destination\$EvergreenAppInstaller -DestinationPath "$Destination"
 
 # Deploy Microsoft FSLogix Apps Agent
-Write-Host "Installing $Vendor $Product v$Version" -ForegroundColor Cyan
+Write-Host "Installing $Vendor $Product v$EvergreenAppVersion" -ForegroundColor Cyan
 Write-Host ""
 Start-Process -FilePath "$Destination\x64\Release\FSLogixAppsSetup.exe" -Wait -ArgumentList $InstallArguments
 
