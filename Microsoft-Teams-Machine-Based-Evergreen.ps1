@@ -45,13 +45,11 @@ Update-Module Evergreen -Force
 # Configure Evergreen variables to download the lastest 64-bit version of Microsoft Teams
 $Vendor = "Microsoft"
 $Product = "Teams"
-$PackageName = "Teams_windows_x64"
-$Evergreen = Get-MicrosoftTeams | Where-Object { $_.Architecture -eq "x64"} | Sort-Object -Property Version -Descending | Select-Object -First 1
-$Version = $Evergreen.Version
-$URL = $Evergreen.uri
-$InstallerType = "msi"
-$Source = "$PackageName" + "." + "$InstallerType"
-$Destination = "C:\Temp" + "\$Vendor\$Product\$Version"
+$EvergreenApp = Get-EvergreenApp -Name MicrosoftTeams | Where-Object {$_.Architecture -eq "x64" -and $_.Ring -eq "General"}
+$EvergreenAppInstaller = Split-Path -Path $EvergreenApp.Uri -Leaf
+$EvergreenAppURL = $EvergreenApp.uri
+$EvergreenAppVersion = $EvergreenApp.Version
+$Destination = "C:\Temp\$Vendor $Product"
 
 # Application install arguments 
 # This will prevent desktop and taskbar shortcuts from appearing during first logon 
@@ -80,11 +78,11 @@ New-Item -Path "HKLM:Software\Citrix\PortICA\"
 # Download and deploy application
 Write-Host "Downloading latest $Vendor $Product release" -ForegroundColor Cyan
 Write-Host ""
-Invoke-WebRequest -UseBasicParsing -Uri $url -OutFile $Destination\$Source
+Invoke-WebRequest -UseBasicParsing -Uri $EvergreenAppURL -OutFile $Destination\$EvergreenAppInstaller
 
-Write-Host "Installing $Vendor $Product v$Version" -ForegroundColor Cyan
+Write-Host "Installing $Vendor $Product v$EvergreenAppVersion" -ForegroundColor Cyan
 Write-Host ""
-Start-Process -FilePath $Destination\$Source -Wait -ArgumentList $InstallArguments
+Start-Process -FilePath $Destination\$EvergreenAppInstaller -Wait -ArgumentList $InstallArguments
 
 # Application post deployment tasks
 Write-Host "Applying $Vendor $Product post setup customizations" -ForegroundColor Cyan
