@@ -46,14 +46,6 @@ Update-Module Evergreen -Force
 # Configure Evergreen variables to download the lastest version of Microsoft FSLogix Apps release
 $Vendor = "Microsoft"
 $Product = "FSLogix Apps Agent"
-# $Evergreen = Get-MicrosoftFSLogixApps | Sort-Object -Property Version -Descending | Select-Object -First 1
-# $Version = $Evergreen.Version
-# $PackageName = "FSLogix_Apps_$version"
-# $URL = $Evergreen.uri
-# $InstallerType = "zip"
-# $Source = "$PackageName" + "." + "$InstallerType"
-# $Destination = "C:\Temp" + "\$Vendor\$Product\$Version"
-
 $EvergreenApp = Get-EvergreenApp -Name MicrosoftFSLogixApps | Sort-Object -Property Version -Descending | Select-Object -First 1
 $EvergreenAppInstaller = Split-Path -Path $EvergreenApp.Uri -Leaf
 $EvergreenAppURL = $EvergreenApp.uri
