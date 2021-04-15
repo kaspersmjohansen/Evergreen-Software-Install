@@ -73,7 +73,7 @@ Write-Host ""
 Start-Process -FilePath $Destination\$EvergreenAppInstaller -Wait -ArgumentList $InstallArguments
 
 # Application post deployment tasks
-Write-Host "Applying Microsoft Edge post setup customizations" -ForegroundColor Cyan
+Write-Host "Applying post setup customizations" -ForegroundColor Cyan
 
 # Disable Microsoft Edge auto update
 If (!(Test-Path -Path HKLM:SOFTWARE\Policies\Microsoft\EdgeUpdate))

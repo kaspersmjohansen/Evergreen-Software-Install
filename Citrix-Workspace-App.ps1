@@ -46,6 +46,7 @@ Update-Module Evergreen -Force
 $Vendor = "Citrix"
 $Product = "Workspace App"
 $EvergreenApp = Get-EvergreenApp -Name CitrixWorkspaceApp | where {$_.Title -eq "Citrix Workspace - Current Release"}
+# $EvergreenApp = Get-EvergreenApp -Name CitrixWorkspaceApp | where {$_.Title -like "Citrix Workspace - LTSR*"}
 $EvergreenAppInstaller = Split-Path -Path $EvergreenApp.Uri -Leaf
 $EvergreenAppURL = $EvergreenApp.uri
 $EvergreenAppVersion = $EvergreenApp.Version
@@ -53,7 +54,7 @@ $Destination = "C:\Temp\$Vendor $Product"
 
 # Application install arguments 
 # This will prevent desktop and taskbar shortcuts from appearing during first logon 
-$InstallArguments = "/noreboot /silent ENABLE_SSON=True EnableCEIP=False "
+$InstallArguments = "/noreboot /silent /forceinstall"
 
 # Create destination folder, if not exist
 If (!(Test-Path -Path $Destination))
@@ -70,10 +71,12 @@ Invoke-WebRequest -UseBasicParsing -Uri $EvergreenAppURL -OutFile $Destination\$
 
 Write-Host "Installing $Vendor $Product v$EvergreenAppVersion" -ForegroundColor Cyan
 Write-Host ""
-Start-Process -FilePath $Destination\$EvergreenAppInstaller -Wait -ArgumentList $InstallArguments
+Start-Process -FilePath $Destination\$EvergreenAppInstaller -ArgumentList $InstallArguments
+
+Start-Sleep -Seconds 180
 
 # Application post deployment tasks
-Write-Host "Applying Microsoft Edge post setup customizations" -ForegroundColor Cyan
+Write-Host "Applying post setup customizations" -ForegroundColor Cyan
 
 # Disable Add Store popup
 New-Item -Path "HKLM:SOFTWARE\Wow6432Node\Policies" -Name Citrix -Force | Out-Null
