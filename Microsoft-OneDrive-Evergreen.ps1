@@ -53,7 +53,7 @@ $Destination = "C:\Temp\$Vendor $Product"
 
 # Application install arguments 
 # This will prevent desktop and taskbar shortcuts from appearing during first logon 
-$InstallArguments = "/allusers"
+$InstallArguments = "/silent /allusers"
 
 # Create destination folder, if not exist
 If (!(Test-Path -Path $Destination))
