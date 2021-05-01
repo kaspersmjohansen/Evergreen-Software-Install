@@ -91,7 +91,7 @@ New-ItemProperty -Path HKLM:SOFTWARE\Policies\Google\Update -Name UpdateDefault 
 Remove-Item -Path "$env:PUBLIC\Desktop\Google Chrome.lnk"
 
 # Download master_prefences files - remember to change this to your own Github repo or the likes
-Invoke-WebRequest -Uri https://github.com/kaspersmjohansen/Evergreen-Software-Install/blob/main/google-chrome-master_preferences -OutFile "$Destination\master_preferences"
+Invoke-WebRequest -Uri https://raw.githubusercontent.com/kaspersmjohansen/Evergreen-Software-Install/main/google-chrome-master_preferences -OutFile "$Destination\master_preferences"
 Copy-Item -Path "$Destination\master_preferences" -Destination "$env:ProgramFiles\Google\Chrome\Application"
 
 # Disable Google Chrome scheduled tasks
