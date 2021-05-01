@@ -71,27 +71,3 @@ Invoke-WebRequest -UseBasicParsing -Uri $EvergreenAppURL -OutFile $Destination\$
 Write-Host "Installing $Vendor $Product v$EvergreenAppVersion" -ForegroundColor Cyan
 Write-Host ""
 Start-Process -FilePath $Destination\$EvergreenAppInstaller -Wait -ArgumentList $InstallArguments
-
-# Application post deployment tasks
-Write-Host "Applying post setup customizations" -ForegroundColor Cyan
-
-# Disable Microsoft Edge auto update
-If (!(Test-Path -Path HKLM:SOFTWARE\Policies\Microsoft\EdgeUpdate))
-{
-New-Item -Path HKLM:SOFTWARE\Policies\Microsoft\EdgeUpdate
-New-ItemProperty -Path HKLM:SOFTWARE\Policies\Microsoft\EdgeUpdate -Name UpdateDefault -Value 0 -PropertyType DWORD
-}
-else
-{
-New-ItemProperty -Path HKLM:SOFTWARE\Policies\Microsoft\EdgeUpdate -Name UpdateDefault -Value 0 -PropertyType DWORD
-}
-
-# Disable Microsoft Edge scheduled tasks
-Get-ScheduledTask -TaskName MicrosoftEdgeUpdate* | Disable-ScheduledTask | Out-Null
-
-# Configure Microsoft Edge update service to manual startup
-Set-Service -Name edgeupdate -StartupType Manual
-
-# Execute the Microsoft Edge browser replacement task to make sure that the legacy Microsoft Edge browser is tucked away
-# This is only needed on Windows 10 versions where Microsoft Edge is not included in the OS.
-Start-Process -FilePath "${env:ProgramFiles(x86)}\Microsoft\EdgeUpdate\MicrosoftEdgeUpdate.exe" -Wait -ArgumentList "/browserreplacement"
