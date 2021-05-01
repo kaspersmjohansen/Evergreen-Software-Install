@@ -78,8 +78,9 @@ Write-Host "Applying post setup customizations" -ForegroundColor Cyan
 # Disable Google Chrome auto update
 If (!(Test-Path -Path HKLM:SOFTWARE\Policies\Google\Update))
 {
-New-Item -Path HKLM:SOFTWARE\Policies\Google\Update
-New-ItemProperty -Path HKLM:\Policies\Google\Update -Name UpdateDefault -Value 0 -PropertyType DWORD
+New-Item -Path HKLM:SOFTWARE\Policies\Google
+New-Item -Path HKLM:SOFTWARE\Policies\Google -Name Update
+New-ItemProperty -Path HKLM:SOFTWARE\Policies\Google\Update -Name UpdateDefault -Value 0 -PropertyType DWORD
 }
 else
 {
@@ -93,13 +94,8 @@ Remove-Item -Path "$env:PUBLIC\Desktop\Google Chrome.lnk"
 Invoke-WebRequest -Uri https://github.com/kaspersmjohansen/Evergreen-Software-Install/blob/main/google-chrome-master_preferences -OutFile "$Destination\master_preferences"
 Copy-Item -Path "$Destination\master_preferences" -Destination "$env:ProgramFiles\Google\Chrome\Application"
 
+# Disable Google Chrome scheduled tasks
+Get-ScheduledTask -TaskName GoogleUpdate* | Disable-ScheduledTask | Out-Null
 
-# Disable Microsoft Edge scheduled tasks
-# Get-ScheduledTask -TaskName MicrosoftEdgeUpdate* | Disable-ScheduledTask | Out-Null
-
-# Configure Microsoft Edge update service to manual startup
-# Set-Service -Name edgeupdate -StartupType Manual
-
-# Execute the Microsoft Edge browser replacement task to make sure that the legacy Microsoft Edge browser is tucked away
-# This is only needed on Windows 10 versions where Microsoft Edge is not included in the OS.
-# Start-Process -FilePath "${env:ProgramFiles(x86)}\Microsoft\EdgeUpdate\MicrosoftEdgeUpdate.exe" -Wait -ArgumentList "/browserreplacement"
+# Configure Google Chrome update service to manual startup
+Set-Service -Name gupdate -StartupType Manual
