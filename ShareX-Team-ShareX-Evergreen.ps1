@@ -53,7 +53,7 @@ $Destination = "C:\Temp\$Vendor $Product"
 
 # Application install arguments 
 # This will prevent desktop and taskbar shortcuts from appearing during first logon 
-$InstallArguments = "REBOOT=ReallySuppress /qn"
+$InstallArguments = "/VERYSILENT /NORESTART /ALLUSERS /NORUN"
 
 # Create destination folder, if not exist
 If (!(Test-Path -Path $Destination))
@@ -75,27 +75,5 @@ Start-Process -FilePath $Destination\$EvergreenAppInstaller -Wait -ArgumentList 
 # Application post deployment tasks
 Write-Host "Applying post setup customizations" -ForegroundColor Cyan
 
-# Disable Google Chrome auto update
-If (!(Test-Path -Path HKLM:SOFTWARE\Policies\Google\Update))
-{
-New-Item -Path HKLM:SOFTWARE\Policies\Google
-New-Item -Path HKLM:SOFTWARE\Policies\Google -Name Update
-New-ItemProperty -Path HKLM:SOFTWARE\Policies\Google\Update -Name UpdateDefault -Value 0 -PropertyType DWORD
-}
-else
-{
-New-ItemProperty -Path HKLM:SOFTWARE\Policies\Google\Update -Name UpdateDefault -Value 0 -PropertyType DWORD
-}
-
-# Delete Google Chrome desktop shortcut i public user's desktop
-Remove-Item -Path "$env:PUBLIC\Desktop\Google Chrome.lnk"
-
-# Download master_prefences files - remember to change this to your own Github repo or the likes
-Invoke-WebRequest -Uri https://raw.githubusercontent.com/kaspersmjohansen/Evergreen-Software-Install/main/google-chrome-master_preferences -OutFile "$Destination\master_preferences"
-Copy-Item -Path "$Destination\master_preferences" -Destination "$env:ProgramFiles\Google\Chrome\Application"
-
-# Disable Google Chrome scheduled tasks
-Get-ScheduledTask -TaskName GoogleUpdate* | Disable-ScheduledTask | Out-Null
-
-# Configure Google Chrome update service to manual startup
-Set-Service -Name gupdate -StartupType Manual
+# Delete desktop shortcut in install user's desktop
+Remove-Item -Path "C:\Users\$env:USERNAME\Desktop\ShareX.lnk"
