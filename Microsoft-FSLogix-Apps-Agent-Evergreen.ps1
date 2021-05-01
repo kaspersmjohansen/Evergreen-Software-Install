@@ -1,7 +1,7 @@
 ﻿#Requires -RunAsAdministrator
 <#
 *************************************************************************************************
-Name:               Microsoft-FSLogix-Apps-Evergreen
+Name:               Microsoft-FSLogix-Apps-Agent-Evergreen
 Author:             Kasper Johansen
 Website:            https://virtualwarlock.net            
 

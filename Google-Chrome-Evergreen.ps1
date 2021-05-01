@@ -1,7 +1,7 @@
 ﻿#Requires -RunAsAdministrator
 <#
 *************************************************************************************************
-Name:               Google-Chrome
+Name:               Google-Chrome-Evergreen
 Author:             Kasper Johansen
 Website:            https://virtualwarlock.net            
 
