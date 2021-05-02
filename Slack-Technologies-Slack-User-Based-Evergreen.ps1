@@ -1,4 +1,5 @@
-﻿<#
+﻿#Requires -RunAsAdministrator
+<#
 *************************************************************************************************
 Name:               Slack-Technologies-Slack-User-Based-Evergreen
 Author:             Kasper Johansen
