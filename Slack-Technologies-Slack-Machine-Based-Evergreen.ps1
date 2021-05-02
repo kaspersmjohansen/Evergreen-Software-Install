@@ -1,13 +1,13 @@
 ﻿#Requires -RunAsAdministrator
 <#
 *************************************************************************************************
-Name:               Slack-Technologies-Slack-User-Based-Evergreen
+Name:               Slack-Technologies-Slack-Machine-Based-Evergreen
 Author:             Kasper Johansen
 Website:            https://virtualwarlock.net            
 
 *************************************************************************************************
 .DESCRIPTION
-    This script installs the latest Microsoft Teams User-Based 
+    This script installs the latest Slack machine based
     using the Evergreen module created by Aaron Parker, Bronson Mangan and Trond Eric Haavarstein
     https://github.com/aaronparker/Evergreen
 
