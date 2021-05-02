@@ -7,7 +7,7 @@ Website:            https://virtualwarlock.net
 
 *************************************************************************************************
 .DESCRIPTION
-    This script installs the latest Google Chrome
+    This script installs the latest WinSCP
     using the Evergreen module created by Aaron Parker, Bronson Mangan and Trond Eric Haavarstein
     https://github.com/aaronparker/Evergreen
 
