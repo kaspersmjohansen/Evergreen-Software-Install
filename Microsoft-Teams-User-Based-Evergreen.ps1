@@ -1,5 +1,4 @@
-﻿#Requires -RunAsAdministrator
-<#
+﻿<#
 *************************************************************************************************
 Name:               Microsoft-Teams-User-Based-Evergreen
 Author:             Kasper Johansen
