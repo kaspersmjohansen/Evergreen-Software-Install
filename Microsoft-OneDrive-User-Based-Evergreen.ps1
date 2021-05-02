@@ -1,4 +1,5 @@
-﻿<#
+﻿#Requires -RunAsAdministrator
+<#
 *************************************************************************************************
 Name:               Microsoft-OneDrive-User-Based-Evergreen
 Author:             Kasper Johansen
