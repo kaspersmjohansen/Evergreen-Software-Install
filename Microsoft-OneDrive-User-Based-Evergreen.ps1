@@ -1,5 +1,4 @@
-﻿#Requires -RunAsAdministrator
-<#
+﻿<#
 *************************************************************************************************
 Name:               Microsoft-OneDrive-User-Based-Evergreen
 Author:             Kasper Johansen
@@ -7,7 +6,7 @@ Website:            https://virtualwarlock.net
 
 *************************************************************************************************
 .DESCRIPTION
-    This script installs the latest Microsoft Edge 
+    This script installs the latest Microsoft OneDrive user based
     using the Evergreen module created by Aaron Parker, Bronson Mangan and Trond Eric Haavarstein
     https://github.com/aaronparker/Evergreen
 
