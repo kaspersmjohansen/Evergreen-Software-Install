@@ -11,6 +11,9 @@ Website:            https://virtualwarlock.net
     using the Evergreen module created by Aaron Parker, Bronson Mangan and Trond Eric Haavarstein
     https://github.com/aaronparker/Evergreen
 
+    Post setup customizations are explained here:
+    https://virtualwarlock.net/microsoft-edge-in-citrix-revamped/
+
 *************************************************************************************************
 #>
 
@@ -76,6 +79,8 @@ Start-Process -FilePath $Destination\$EvergreenAppInstaller -Wait -ArgumentList 
 Write-Host "Applying post setup customizations" -ForegroundColor Cyan
 
 # Disable Microsoft Edge auto update
+Write-Host "Disable Microsoft Edge auto update" -ForegroundColor Cyan
+Write-Host ""
 If (!(Test-Path -Path HKLM:SOFTWARE\Policies\Microsoft\EdgeUpdate))
 {
 New-Item -Path HKLM:SOFTWARE\Policies\Microsoft\EdgeUpdate
@@ -87,9 +92,13 @@ New-ItemProperty -Path HKLM:SOFTWARE\Policies\Microsoft\EdgeUpdate -Name UpdateD
 }
 
 # Disable Microsoft Edge scheduled tasks
+Write-Host "Disable Microsoft Edge scheduled tasks" -ForegroundColor Cyan
+Write-Host ""
 Get-ScheduledTask -TaskName MicrosoftEdgeUpdate* | Disable-ScheduledTask | Out-Null
 
 # Configure Microsoft Edge update service to manual startup
+Write-Host "Configure Microsoft Edge update service to manual startup" -ForegroundColor Cyan
+Write-Host ""
 Set-Service -Name edgeupdate -StartupType Manual
 
 # Execute the Microsoft Edge browser replacement task to make sure that the legacy Microsoft Edge browser is tucked away
