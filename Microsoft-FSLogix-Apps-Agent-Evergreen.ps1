@@ -87,7 +87,6 @@ Write-Host ""
 
 # Windows Search CoreCount modification
 Write-Host "Modifying Windows Search service Core Count" -ForegroundColor Cyan
-Write-Host ""
 New-ItemProperty -Path "HKLM:SOFTWARE\Microsoft\Windows Search" -Name "CoreCount" -Value "1" -Type DWORD
 
 # Enable or disable FSLogix Apps agent search roaming - Apply different configurations based on operating system
@@ -95,7 +94,7 @@ If ($OS -Like "*Windows Server 2016*")
 {
     Write-Host "Configuring FSLogix search roaming for $OS" -ForegroundColor Cyan
     Write-Host ""
-    Set-ItemProperty -Path "HKLM:SOFTWARE\FSLogix\Apps" -Name "RoamSearch" -Value "2" -Type DWORD -Verbose
+    Set-ItemProperty -Path "HKLM:SOFTWARE\FSLogix\Apps" -Name "RoamSearch" -Value "2" -Type DWORD
 }
         If ($OS -Like "*Windows Server 2019*" -or $OS -eq "Microsoft Windows 10 Enterprise for Virtual Desktops")
         {
