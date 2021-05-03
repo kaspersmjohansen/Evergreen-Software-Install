@@ -79,7 +79,7 @@ Write-Host ""
 Start-Process -FilePath "$Destination\x64\Release\FSLogixAppsSetup.exe" -Wait -ArgumentList $InstallArguments
 
 # Application post deployment tasks
-Write-Host "Applying $Vendor $Product post setup customizations" -ForegroundColor Cyan
+Write-Host "Applying post setup customizations" -ForegroundColor Cyan
 
 # Windows Search CoreCount modification
 New-ItemProperty -Path "HKLM:SOFTWARE\Microsoft\Windows Search" -Name "CoreCount" -Value "1" -Type DWORD
