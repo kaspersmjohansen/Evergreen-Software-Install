@@ -53,6 +53,7 @@ $EvergreenAppInstaller = Split-Path -Path $EvergreenApp.Uri -Leaf
 $EvergreenAppURL = $EvergreenApp.uri
 $EvergreenAppVersion = $EvergreenApp.Version
 $Destination = "C:\Temp\$Vendor $Product"
+$OS = (Get-WmiObject Win32_OperatingSystem).Caption
 
 # Application install arguments 
 # This will prevent desktop and taskbar shortcuts from appearing during first logon 
@@ -103,4 +104,7 @@ Set-Service -Name edgeupdate -StartupType Manual
 
 # Execute the Microsoft Edge browser replacement task to make sure that the legacy Microsoft Edge browser is tucked away
 # This is only needed on Windows 10 versions where Microsoft Edge is not included in the OS.
+If ($OS -Like "*Windows 10*")
+{
 Start-Process -FilePath "${env:ProgramFiles(x86)}\Microsoft\EdgeUpdate\MicrosoftEdgeUpdate.exe" -Wait -ArgumentList "/browserreplacement"
+}
