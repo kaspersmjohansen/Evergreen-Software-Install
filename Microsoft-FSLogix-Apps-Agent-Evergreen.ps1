@@ -12,6 +12,9 @@ Website:            https://virtualwarlock.net
     using the Evergreen module created by Aaron Parker, Bronson Mangan and Trond Eric Haavarstein
     https://github.com/aaronparker/Evergreen
 
+    Post setup customizations are explained here:
+    https://virtualwarlock.net/how-to-install-the-fslogix-apps-agent/
+
 *************************************************************************************************
 #>
 
@@ -80,25 +83,36 @@ Start-Process -FilePath "$Destination\x64\Release\FSLogixAppsSetup.exe" -Wait -A
 
 # Application post deployment tasks
 Write-Host "Applying post setup customizations" -ForegroundColor Cyan
+Write-Host ""
 
 # Windows Search CoreCount modification
+Write-Host "Modifying Windows Search service Core Count" -ForegroundColor Cyan
+Write-Host ""
 New-ItemProperty -Path "HKLM:SOFTWARE\Microsoft\Windows Search" -Name "CoreCount" -Value "1" -Type DWORD
 
 # Enable or disable FSLogix Apps agent search roaming - Apply different configurations based on operating system
 If ($OS -Like "*Windows Server 2016*")
 {
+    Write-Host "Configuring FSLogix search roaming for $OS" -ForegroundColor Cyan
+    Write-Host ""
     Set-ItemProperty -Path "HKLM:SOFTWARE\FSLogix\Apps" -Name "RoamSearch" -Value "2" -Type DWORD -Verbose
 }
         If ($OS -Like "*Windows Server 2019*" -or $OS -eq "Microsoft Windows 10 Enterprise for Virtual Desktops")
         {
+            Write-Host "Configuring FSLogix search roaming for $OS" -ForegroundColor Cyan
+            Write-Host ""
             Set-ItemProperty -Path "HKLM:SOFTWARE\FSLogix\Apps" -Name "RoamSearch" -Value "0" -Type DWORD
         }
             If ($OS -Like "*Windows 10*" -and $OS -ne "Microsoft Windows 10 Enterprise for Virtual Desktops")
             {
+                Write-Host "Configuring FSLogix search roaming for $OS" -ForegroundColor Cyan
+                Write-Host ""
                 Set-ItemProperty -Path "HKLM:SOFTWARE\FSLogix\Apps" -Name "RoamSearch" -Value "1" -Type DWORD
             }
 
 # Implement user based group policy processing fix
+Write-Host "Configuring FSLogix user based group policy processing registry fix" -ForegroundColor Cyan
+Write-Host ""
 If (!(Test-Path -Path HKLM:SOFTWARE\FSLogix\Profiles))
 {
 New-Item -Path "HKLM:SOFTWARE\FSLogix" -Name Profiles
@@ -109,7 +123,11 @@ else
 New-ItemProperty -Path "HKLM:SOFTWARE\FSLogix\Profiles" -Name "GroupPolicyState" -Value "0" -Type DWORD
 }
 
-# Implement scheduled task to restart Windows Search service on Event ID 2
+# Implement scheduled task to restart Windows Search service on Event ID 2 on Windows Server 2019
+If ($OS -Like "*Windows Server 2019*")
+{
+Write-Host "Configuring Windows scheduled task workaround for the Windows Search issue in $OS" -ForegroundColor Cyan
+Write-Host ""
 # Define CIM object variables
 # This is needed for accessing the non-default trigger settings when creating a schedule task using Powershell
 $Class = cimclass MSFT_TaskEventTrigger root/Microsoft/Windows/TaskScheduler
@@ -134,3 +152,4 @@ $RegSchTaskParameters = @{
 }
 
 Register-ScheduledTask @RegSchTaskParameters
+}
