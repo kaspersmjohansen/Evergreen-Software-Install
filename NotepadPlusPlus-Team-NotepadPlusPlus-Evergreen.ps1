@@ -1,7 +1,7 @@
 ﻿#Requires -RunAsAdministrator
 <#
 *************************************************************************************************
-Name:               
+Name:               NotepadPlusPlus-Team-NotepadPlusPlus-Evergreen
 Author:             Kasper Johansen
 Website:            https://virtualwarlock.net            
 
