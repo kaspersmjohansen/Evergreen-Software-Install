@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<NotepadPlus>
-    <GUIConfigs>
-        <GUIConfig name="noUpdate" intervalDays="15" nextUpdateDate="20210526">yes</GUIConfig>
-    </GUIConfigs>
-</NotepadPlus>
