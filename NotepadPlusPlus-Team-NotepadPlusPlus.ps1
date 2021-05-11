@@ -76,5 +76,5 @@ Start-Process -FilePath $Destination\$EvergreenAppInstaller -Wait -ArgumentList 
 Write-Host "Applying post setup customizations" -ForegroundColor Cyan
 
 # Download config file to disable auto update - remember to change this to your own Github repo or the likes
-Invoke-WebRequest -Uri https://raw.githubusercontent.com/kaspersmjohansen/Evergreen-Software-Install/main/NotepadPlusPlus-config.xml -OutFile "$Destination\config.xml"
-Copy-Item -Path "$Destination\config.xml" -Destination "$env:ProgramFiles\Notepad++"
+Invoke-WebRequest -Uri https://raw.githubusercontent.com/kaspersmjohansen/Evergreen-Software-Install/main/NotepadPlusPlus-config-model.xml -OutFile "$Destination\config-model.xml"
+Copy-Item -Path "$Destination\config-model.xml" -Destination "$env:ProgramFiles\Notepad++"
