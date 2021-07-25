@@ -45,7 +45,7 @@ Update-Module Evergreen -Force
 # Configure Evergreen variables
 $Vendor = "Microsoft"
 $Product = "Remote Desktop"
-$EvergreenApp = Get-EvergreenApp -Name MicrosoftWvdRemoteDesktop | where {$_.Architecture -eq "x64"}
+$EvergreenApp = Get-EvergreenApp -Name MicrosoftWvdRemoteDesktop | where {$_.Architecture -eq "x64" -and $_.Channel -eq "Public"}
 $EvergreenAppInstaller = Split-Path -Path $EvergreenApp.Uri -Leaf
 $EvergreenAppURL = $EvergreenApp.uri
 $EvergreenAppVersion = $EvergreenApp.Version
