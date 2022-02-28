@@ -96,7 +96,7 @@ If ($OS -Like "*Windows Server 2016*")
     Write-Host ""
     Set-ItemProperty -Path "HKLM:SOFTWARE\FSLogix\Apps" -Name "RoamSearch" -Value "2" -Type DWORD
 }
-        If ($OS -Like "*Windows Server 2019*" -or $OS -eq "Microsoft Windows 10 Enterprise for Virtual Desktops")
+        If ($OS -Like "*Windows Server 2019*" -or $OS -Like "*Windows Server 2022*" -or $OS -eq "Microsoft Windows 10 Enterprise for Virtual Desktops")
         {
             Write-Host "Configuring FSLogix search roaming for $OS" -ForegroundColor Cyan
             Write-Host ""
@@ -123,7 +123,7 @@ New-ItemProperty -Path "HKLM:SOFTWARE\FSLogix\Profiles" -Name "GroupPolicyState"
 }
 
 # Implement scheduled task to restart Windows Search service on Event ID 2 on Windows Server 2019
-If ($OS -Like "*Windows Server 2019*")
+If ($OS -Like "*Windows Server 2019*" -or $OS -Like "*Windows Server 2022*")
 {
 Write-Host "Configuring Windows scheduled task workaround for the Windows Search issue in $OS" -ForegroundColor Cyan
 Write-Host ""
