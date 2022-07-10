@@ -45,7 +45,7 @@ Update-Module Evergreen -Force
 # Configure Evergreen variables
 $Vendor = "Microsoft"
 $Product = "dotNET Desktop Runtime"
-$EvergreenApp = Get-EvergreenApp -Name Microsoft.NET | where {$_.Installer -eq "windowsdesktop" -and $_.Channel -eq "Current" -and $_.Architecture -eq "x64"}
+$EvergreenApp = Get-EvergreenApp -Name Microsoft.NET | where {$_.Installer -eq "windowsdesktop" -and $_.Channel -eq "LTS" -and $_.Architecture -eq "x64"}
 $EvergreenAppInstaller = Split-Path -Path $EvergreenApp.Uri -Leaf
 $EvergreenAppURL = $EvergreenApp.uri
 $EvergreenAppVersion = $EvergreenApp.Version
