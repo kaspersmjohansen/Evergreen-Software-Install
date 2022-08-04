@@ -49,7 +49,7 @@ Update-Module Evergreen -Force
 # Configure Evergreen variables
 $Vendor = "Microsoft"
 $Product = "FSLogix Apps Agent"
-$EvergreenApp = Get-EvergreenApp -Name MicrosoftFSLogixApps | Where-Object {$_.Channel -eq "Production" } | Sort-Object -Property Version -Descending | Select-Object -First 1
+$EvergreenApp = Get-EvergreenApp -Name MicrosoftFSLogixApps | Where-Object {$_.Channel -eq "Production" }
 $EvergreenAppInstaller = Split-Path -Path $EvergreenApp.Uri -Leaf
 $EvergreenAppURL = $EvergreenApp.uri
 $EvergreenAppVersion = $EvergreenApp.Version
