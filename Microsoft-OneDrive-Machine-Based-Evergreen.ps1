@@ -45,7 +45,7 @@ Update-Module Evergreen -Force
 # Configure Evergreen variables
 $Vendor = "Microsoft"
 $Product = "OneDrive"
-$EvergreenApp = Get-EvergreenApp -Name MicrosoftOneDrive | Where-Object {$_.Architecture -eq "AMD64" -and $_.Ring -eq "Production" -and $_.Type -eq "exe"} | Sort-Object | Select-Object -First 1
+$EvergreenApp = Get-EvergreenApp -Name MicrosoftOneDrive | Where-Object {$_.Architecture -eq "AMD64" -and $_.Ring -eq "Production" -and $_.Type -eq "exe"} | Sort-Object Version | Select-Object -First 1
 $EvergreenAppInstaller = Split-Path -Path $EvergreenApp.Uri -Leaf
 $EvergreenAppURL = $EvergreenApp.uri
 $EvergreenAppVersion = $EvergreenApp.Version
