@@ -45,7 +45,7 @@ Update-Module Evergreen -Force
 # Configure Evergreen variables
 $Vendor = "Citrix"
 $Product = "Workspace App"
-$EvergreenApp = Get-EvergreenApp -Name CitrixWorkspaceApp | where {$_.Title -eq "Citrix Workspace - Current Release"}
+$EvergreenApp = Get-EvergreenApp -Name CitrixWorkspaceApp | Where-Object {$_.Title -eq "Citrix Workspace - Current Release"}
 # $EvergreenApp = Get-EvergreenApp -Name CitrixWorkspaceApp | where {$_.Title -like "Citrix Workspace - LTSR*"}
 $EvergreenAppInstaller = Split-Path -Path $EvergreenApp.Uri -Leaf
 $EvergreenAppURL = $EvergreenApp.uri
