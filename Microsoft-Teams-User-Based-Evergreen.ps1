@@ -45,7 +45,7 @@ Update-Module Evergreen -Force
 # Configure Evergreen variables
 $Vendor = "Microsoft"
 $Product = "Teams"
-$EvergreenApp = Get-EvergreenApp -Name MicrosoftTeams | Where-Object {$_.Architecture -eq "x64" -and $_.Ring -eq "General"}
+$EvergreenApp = Get-EvergreenApp -Name MicrosoftTeams | Where-Object {$_.Architecture -eq "x64" -and $_.Ring -eq "General" -and $_.Type -eq "msi"}
 $EvergreenAppInstaller = Split-Path -Path $EvergreenApp.Uri -Leaf
 $EvergreenAppURL = $EvergreenApp.uri
 $EvergreenAppVersion = $EvergreenApp.Version
