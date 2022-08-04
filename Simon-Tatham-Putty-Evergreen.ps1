@@ -45,7 +45,7 @@ Update-Module Evergreen -Force
 # Configure Evergreen variables
 $Vendor = "Simon Tatham"
 $Product = "Putty"
-$EvergreenApp = Get-EvergreenApp -Name PuTTY | where {$_.Architecture -eq "x64"}
+$EvergreenApp = Get-EvergreenApp -Name PuTTY | Where-Object {$_.Architecture -eq "x64"}
 $EvergreenAppInstaller = Split-Path -Path $EvergreenApp.Uri -Leaf
 $EvergreenAppURL = $EvergreenApp.uri
 $EvergreenAppVersion = $EvergreenApp.Version
