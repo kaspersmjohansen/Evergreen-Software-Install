@@ -45,7 +45,7 @@ Update-Module Evergreen -Force
 # Configure Evergreen variables
 $Vendor = "Foxit Software"
 $Product = "Foxit Reader"
-$EvergreenApp = Get-EvergreenApp -Name FoxitReader | where {$_.Language -eq "English"}
+$EvergreenApp = Get-EvergreenApp -Name FoxitReader | Where-Object {$_.Language -eq "English"}
 $EvergreenAppInstaller = Split-Path -Path $EvergreenApp.Uri -Leaf
 $EvergreenAppURL = $EvergreenApp.uri
 $EvergreenAppVersion = $EvergreenApp.Version
