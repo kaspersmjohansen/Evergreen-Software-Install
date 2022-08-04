@@ -45,7 +45,7 @@ Update-Module Evergreen -Force
 # Configure Evergreen variables
 $Vendor = "Igor Pavlov"
 $Product = "7-Zip"
-$EvergreenApp = Get-EvergreenApp -Name 7zip | where {$_.Architecture -eq "x64" -and $_.Type -eq "msi"}
+$EvergreenApp = Get-EvergreenApp -Name 7zip | Where-Object {$_.Architecture -eq "x64" -and $_.Type -eq "msi"}
 $EvergreenAppInstaller = Split-Path -Path $EvergreenApp.Uri -Leaf
 $EvergreenAppURL = $EvergreenApp.uri
 $EvergreenAppVersion = $EvergreenApp.Version
