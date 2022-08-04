@@ -45,7 +45,7 @@ Update-Module Evergreen -Force
 # Configure Evergreen variables
 $Vendor = "Microsoft"
 $Product = "SQl Management Studio"
-$EvergreenApp = Get-EvergreenApp -Name MicrosoftSsms | where {$_.Language -eq "English"}
+$EvergreenApp = Get-EvergreenApp -Name MicrosoftSsms | Where-Object {$_.Language -eq "English"}
 $EvergreenAppInstaller = Split-Path -Path $EvergreenApp.Uri -Leaf
 $EvergreenAppURL = $EvergreenApp.uri
 $EvergreenAppVersion = $EvergreenApp.Version
