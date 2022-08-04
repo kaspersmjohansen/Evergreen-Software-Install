@@ -45,7 +45,7 @@ Update-Module Evergreen -Force
 # Configure Evergreen variables
 $Vendor = "Adobe"
 $Product = "Reader DC"
-$EvergreenApp = Get-EvergreenApp -Name AdobeAcrobatReaderDC | where {$_.Architecture -eq "x64" -and $_.Language -eq "English"}
+$EvergreenApp = Get-EvergreenApp -Name AdobeAcrobatReaderDC | where {$_.Architecture -eq "x64" -and $_.Language -eq "MUI"}
 $EvergreenAppInstaller = Split-Path -Path $EvergreenApp.Uri -Leaf
 $EvergreenAppURL = $EvergreenApp.uri
 $EvergreenAppVersion = $EvergreenApp.Version
