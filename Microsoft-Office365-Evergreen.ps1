@@ -44,8 +44,8 @@ Update-Module Evergreen -Force
 
 # Configure Evergreen variables
 $Vendor = "Microsoft"
-$Product = "Office 365"
-$EvergreenApp = Get-EvergreenApp -Name Microsoft365Apps | where {$_.Channel -eq "Monthly"}
+$Product = "365 Apps for Enterprise"
+$EvergreenApp = Get-EvergreenApp -Name Microsoft365Apps | Where-Object {$_.Channel -eq "Current"}
 $EvergreenAppInstaller = Split-Path -Path $EvergreenApp.Uri -Leaf
 $EvergreenAppURL = $EvergreenApp.uri
 $EvergreenAppVersion = $EvergreenApp.Version
