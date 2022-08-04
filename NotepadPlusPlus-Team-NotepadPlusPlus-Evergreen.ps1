@@ -45,7 +45,7 @@ Update-Module Evergreen -Force
 # Configure Evergreen variables
 $Vendor = "Notepad Plus Plus Team"
 $Product = "Notepad Plus Plus"
-$EvergreenApp = Get-EvergreenApp -Name NotepadPlusPlus | where {$_.Architecture -eq "x64" -and $_.type -eq "exe"}
+$EvergreenApp = Get-EvergreenApp -Name NotepadPlusPlus | Where-Object {$_.Architecture -eq "x64" -and $_.type -eq "exe"}
 $EvergreenAppInstaller = Split-Path -Path $EvergreenApp.Uri -Leaf
 $EvergreenAppURL = $EvergreenApp.uri
 $EvergreenAppVersion = $EvergreenApp.Version
