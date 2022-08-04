@@ -45,7 +45,7 @@ Update-Module Evergreen -Force
 # Configure Evergreen variables
 $Vendor = "The HandBrake Team"
 $Product = "Handbrake"
-$EvergreenApp = Get-EvergreenApp -Name Handbrake | where {$_.Architecture -eq "x64" -and $_.Type -eq "exe"}
+$EvergreenApp = Get-EvergreenApp -Name Handbrake | Where-Object {$_.Architecture -eq "x64" -and $_.Type -eq "exe"}
 $EvergreenAppInstaller = Split-Path -Path $EvergreenApp.Uri -Leaf
 $EvergreenAppURL = $EvergreenApp.uri
 $EvergreenAppVersion = $EvergreenApp.Version
